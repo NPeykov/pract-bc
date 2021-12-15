@@ -1,17 +1,36 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from 'react'
+import ReactDOM from 'react-dom'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+//content
+const part1 = 'Fundamentals of React'
+const exercises1 = 10
+const part2 = 'Using props to pass data'
+const exercises2 = 7
+const part3 = 'State of a component'
+const exercises3 = 14
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const Header = (props) => {
+  return <h1>Half Stack application development</h1>
+}
+
+const Part = (props) => {
+  return (
+      <p>
+        {props.message} {props.total}
+      </p>
+  )
+}
+
+const App = () => {
+  return (
+    <div>
+      <Header />
+      <Part message = {part1} total = {exercises1}/>
+      <Part message = {part2} total = {exercises2}/>
+      <Part message = {part3} total = {exercises3}/>
+      <Part message = 'Number of exercises' total = {exercises1 + exercises2 + exercises3}/>
+    </div>
+  )
+}
+
+ReactDOM.render(<App />, document.getElementById('root'))
