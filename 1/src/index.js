@@ -1,36 +1,60 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from "react";
+import ReactDOM from "react-dom";
 
 //content
-const part1 = 'Fundamentals of React'
-const exercises1 = 10
-const part2 = 'Using props to pass data'
-const exercises2 = 7
-const part3 = 'State of a component'
-const exercises3 = 14
 
-const Header = (props) => {
-  return <h1>Half Stack application development</h1>
-}
+const title1 = "Half Stack application development";
 
-const Part = (props) => {
-  return (
+const parts = [
+  {
+    name: "Fundamentals of React",
+    exercises: 10,
+  },
+  {
+    name: "Using props to pass data",
+    exercises: 7,
+  },
+  {
+    name: "State of a component",
+    exercises: 14,
+  },
+];
+
+const Header = ({ title }) => <h1>{title}</h1>;
+
+const Part = ({ parts }) => {
+  return parts.map(function (element) {
+    return (
       <p>
-        {props.message} {props.total}
+        {element.name} {element.exercises}
       </p>
-  )
-}
+    );
+  });
+};
+
+const Total = ({ parts }) => {
+  const total = parts.reduce(function(prevValue, currentValue) {
+    return {
+      exercises: prevValue.exercises + currentValue.exercises
+    }
+  });
+
+  return (
+    <p>
+      <br />
+      Number of exercises {total.exercises}
+    </p>
+  );
+};
 
 const App = () => {
   return (
     <div>
-      <Header />
-      <Part message = {part1} total = {exercises1}/>
-      <Part message = {part2} total = {exercises2}/>
-      <Part message = {part3} total = {exercises3}/>
-      <Part message = 'Number of exercises' total = {exercises1 + exercises2 + exercises3}/>
+      <Header title={title1} />
+      <Part parts={parts} />
+      <Total parts={parts} />
     </div>
-  )
-}
+  );
+};
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(<App />, document.getElementById("root"));
