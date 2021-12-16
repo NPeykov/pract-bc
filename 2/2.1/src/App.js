@@ -1,32 +1,44 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 
 const INITIAL_PERSONS = [
-  { name: 'Arto Hellas' },
-  { name: 'Tom Hendrix' }
-]
+  { name: "Arto Hellas", phone: "011-451242" },
+  { name: "Tom Hendrix", phone: "011-425748" },
+];
 
-const Persons = ({persons}) => {
-  return (
-    persons.map((person) => {
-      return <p>{person.name}</p>
-    })
-  );
+const Persons = ({ persons }) => (
+  persons.map((person) => {
+    return (
+      <p key={person.name}>{person.name} {person.phone}</p>
+    );
+  })
+);
+
+function nameIsTaken(persons, newName) {
+  return persons.some((person) => person.name === newName.name);
 }
 
 const App = () => {
-  const [ persons, setPersons ] = useState(INITIAL_PERSONS) 
-  const [ newName, setNewName ] = useState('')
+  const [persons, setPersons] = useState(INITIAL_PERSONS);
+  const [newPerson, setNewPerson] = useState({name: '', phone: ''});
 
   function fillNameHandler(event) {
-    let actualText = event.currentTarget.value
-    setNewName(actualText)
+    let actualText = event.currentTarget.value;
+    setNewPerson({...newPerson, name: actualText});
   }
-  
+
+  function fillPhoneHandler(event) {
+    let actualPhone = event.currentTarget.value;
+    setNewPerson({...newPerson, phone: actualPhone});
+  }
+
   function addButtonHandler(event) {
-    event.preventDefault()
-    let newPerson = { name: newName }
-    setPersons([...persons, newPerson])
-    setNewName('')
+    event.preventDefault();
+    if (nameIsTaken(persons, newPerson)) {
+      window.alert(`${newPerson.name} is already taken`);
+    } else {
+      setPersons([...persons, newPerson]);
+    }
+    setNewPerson({name: '', phone: ''});
   }
 
   return (
@@ -34,16 +46,21 @@ const App = () => {
       <h2>Phonebook</h2>
       <form>
         <div>
-          name: <input onChange = {fillNameHandler} value={newName}/>
+          name: <input onChange={fillNameHandler} value={newPerson.name} />
         </div>
         <div>
-          <button type="submit" onClick = {addButtonHandler}>add</button>
+          phone: <input onChange={fillPhoneHandler} value={newPerson.phone}/>
+        </div>
+        <div>
+          <button type="submit" onClick={addButtonHandler}>
+            add
+          </button>
         </div>
       </form>
       <h2>Numbers</h2>
-      <Persons persons={persons}/>
+      <Persons persons={persons} />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
