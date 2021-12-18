@@ -4,13 +4,17 @@ const Persons = ({ persons, filter }) => {
   return (
     <>
       <h2>Numbers</h2>
-      {personsToRender.map((person) => {
-        return (
-          <p key={person.name}>
-            {person.name} {person.phone}
-          </p>
-        );
-      })}
+      {persons.length === 0 ? (
+        <p>"CARGANDO..."</p>
+      ) : (
+        personsToRender.map((person) => {
+          return (
+            <p key={person.name}>
+              {person.name} {person.number}
+            </p>
+          );
+        })
+      )}
     </>
   );
 };
