@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getCountries } from "./services/countries.js";
+import Weather from './Weather'
 
 const INITIAL_COUNTRY_STATE = [];
 
@@ -21,7 +22,7 @@ const Countries = ({ filterText }) => {
 
   function renderCountry() {
     const country = countries[0];
-    console.log({country})
+    
     return (
       <>
         <h2>{country.name}</h2>
@@ -46,6 +47,8 @@ const Countries = ({ filterText }) => {
         <h3>Region: {country.region}</h3>
 
         <h3>Subregion: {country.subregion}</h3>
+
+        <Weather city={country.capital}/>
       </>
     );
   }

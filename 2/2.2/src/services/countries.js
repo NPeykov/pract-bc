@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const MAX_RESPONSE_SLICED = 15;
+const MAX_SLICED_RESPONSE = 15;
 
 export function getCountries(filterText) {
   return filterText === ""
@@ -8,6 +8,6 @@ export function getCountries(filterText) {
     : axios
         .get(`https://restcountries.com/v2/name/${filterText}`)
         .then((response) => {
-          return response.data.slice(0, MAX_RESPONSE_SLICED);
+          return response.data.slice(0, MAX_SLICED_RESPONSE);
         });
 }
