@@ -1,26 +1,21 @@
-import React, { useEffect, useState } from "react";
-import Persons from "./Persons";
-import PersonForm from "./PersonForm";
-import Filter from "./Filter";
-import axios from "axios";
+import React, {useState } from "react";
+import Countries from "./Countries";
+
+const INITIAL_FILTER_TEXT = '';
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
-  const [filterText, setFilterText] = useState("");
+  const [filterText, setFilterText] = useState(INITIAL_FILTER_TEXT);
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then((response) =>
-        setPersons((prevData) => response.data)
-      );
-  }, []);
+  function filterInputHandler(event) {
+    let text = event.currentTarget.value;
+    setFilterText(text)
+  }
 
   return (
     <div>
-      <Filter setter={setFilterText} />
-      <PersonForm persons={persons} setter={setPersons} />
-      <Persons persons={persons} filter={filterText} />
+      <h2>Find countries</h2>
+      <input onChange={filterInputHandler}/>
+      <Countries filterText={filterText}/>
     </div>
   );
 };
