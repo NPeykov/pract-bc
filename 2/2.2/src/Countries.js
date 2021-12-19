@@ -11,13 +11,17 @@ const Countries = ({ filterText }) => {
   }, [filterText]);
 
   function renderAllCountries() {
-    return countries.map((country) => {
-      return <p key={country.name}>{country.name}</p>;
-    });
+    return countries.map((country) => (
+      <div key={country.name} style={{display: "flex"}}>
+        <p>{country.name}</p>
+        <button value={country.name} onClick={() => setCountries([country])}>show</button>
+      </div>
+    ));
   }
 
-  function renderCoutry() {
+  function renderCountry() {
     const country = countries[0];
+    console.log({country})
     return (
       <>
         <h2>{country.name}</h2>
@@ -47,7 +51,7 @@ const Countries = ({ filterText }) => {
   }
 
   function renderCountries() {
-    return countries.length === 1 ? renderCoutry() : renderAllCountries();
+    return countries.length === 1 ? renderCountry() : renderAllCountries();
   }
 
   return (
