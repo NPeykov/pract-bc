@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { addPerson, updatePerson } from "./services/personsAPI";
 
-export const PersonForm = ({ persons, setter }) => {
+export const PersonForm = ({ persons, setPersons }) => {
   const [newPerson, setNewPerson] = useState({ name: "", number: "" });
 
   const fillNameHandler = (event) => {
@@ -16,13 +17,28 @@ export const PersonForm = ({ persons, setter }) => {
   function addButtonHandler(event) {
     event.preventDefault();
     if (nameIsTaken(persons, newPerson)) {
-      window.alert(`${newPerson.name} is already taken`);
+      replaceNumber(newPerson)
     } else {
-      newPerson["id"] = persons.length + 1
-      console.log(newPerson)
-      setter([...persons, newPerson]);
+      newPerson["id"] = getMaxId() + 1
+      addPerson(newPerson).then((person) => {
+        setPersons([...persons, person])
+      });
     }
     setNewPerson({ name: "", number: "" });
+  }
+
+  function replaceNumber(newPerson) {
+    if(window.confirm(`${newPerson.name} already exists, overwrite phone?`)) {
+      const personToBeReplaced = persons.find(person => person.name === newPerson.name)
+      updatePerson(personToBeReplaced.id, newPerson).then((person) => {
+        setPersons(prevV => prevV.map(p => p.id !== person.id ? p : person))
+      })
+    }
+  } 
+
+  function getMaxId() {
+    const ids = persons.map(person => person.id)
+    return Math.max(...ids);
   }
 
   function nameIsTaken(persons, newName) {

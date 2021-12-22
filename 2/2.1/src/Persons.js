@@ -1,17 +1,32 @@
-const Persons = ({ persons, filter }) => {
-  let personsToRender = persons.filter((p) => p.name.includes(filter));
+import { deletePerson } from "./services/personsAPI";
 
+const Persons = ({ persons, filterText, setPersons}) => {
+  const personsToRender = () => persons.filter((p) => p.name.includes(filterText));
+  
+  function deleteButtonHandler (id) {
+    if(window.confirm('Are u sure?')) {
+      deletePerson(id).then(() => {
+        setPersons(prevPersons => prevPersons.filter(p => p.id!==id))
+      })
+    }
+  }
+  
   return (
     <>
       <h2>Numbers</h2>
       {persons.length === 0 ? (
         <p>"CARGANDO..."</p>
       ) : (
-        personsToRender.map((person) => {
+        personsToRender().map((person) => {
           return (
-            <p key={person.name}>
+            <div key={person.name}>
+              <li>
               {person.name} {person.number}
-            </p>
+              <button onClick={() => deleteButtonHandler(person.id)}>delete</button>
+             </li>
+
+              <br/>
+            </div>
           );
         })
       )}
