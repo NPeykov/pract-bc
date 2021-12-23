@@ -1,5 +1,7 @@
 const express = require("express");
+const morgan = require("morgan");
 const { json } = require("express/lib/response");
+
 const app = express();
 app.use(express.json());
 
@@ -25,11 +27,21 @@ let notes = [
 ];
 
 const generateId = () => {
-    const maxId = notes.length > 0
-      ? Math.max(...notes.map(n => n.id))
-      : 0
-    return maxId + 1
-  }
+  const maxId = notes.length > 0
+    ? Math.max(...notes.map(n => n.id))
+    : 0
+  return maxId + 1
+}
+
+morgan.token('body', function postBodyReq (req) {
+  return JSON.stringify(req.body)
+})
+
+app.use(morgan(':method :url :status :body', {
+  skip: function (req, res) { return req.method !== 'POST' }
+}))
+
+//controllers
 
 app.get("/", (request, response) => {
   response.send("<h1>Hello world!</h1>");
