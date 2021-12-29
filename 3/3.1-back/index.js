@@ -1,111 +1,112 @@
+require("./mongo");
+
 const express = require("express");
-const morgan = require("morgan");
 const cors = require("cors");
 const { json } = require("express/lib/response");
-
 const app = express();
+const Note = require("./app_schemas/Note");
+const errorHandler = require('./middleware/errorHandler')
+const unknownEndpoint = require('./middleware/unknownEndpoint')
+const postWatcher = require('./middleware/postWatcher')
+
 app.use(express.json());
 app.use(cors());
-
-let notes = [
-  {
-    id: 1,
-    content: "HTML is easy",
-    date: "2019-05-30T17:30:31.098Z",
-    important: true,
-  },
-  {
-    id: 2,
-    content: "Browser can execute only Javascript",
-    date: "2019-05-30T18:39:34.091Z",
-    important: false,
-  },
-  {
-    id: 3,
-    content: "GET and POST are the most important methods of HTTP protocol",
-    date: "2019-05-30T19:20:14.298Z",
-    important: true,
-  },
-];
-
-const generateId = () => {
-  const maxId = notes.length > 0
-    ? Math.max(...notes.map(n => n.id))
-    : 0
-  return maxId + 1
-}
-
-morgan.token('body', function postBodyReq (req) {
-  return JSON.stringify(req.body)
-})
-
-app.use(morgan(':method :url :status :body', {
-  skip: function (req, res) { return req.method !== 'POST' }
-}))
+app.use(postWatcher)
 
 //controllers
 
 app.get("/", (request, response) => {
-  response.send("<h1>Hello world!</h1>");
+  response.send("<h1>Welcome, u might want to visit /notes</h1>");
 });
 
-app.get("/notes", (request, response) => {
-  response.json(notes);
+app.get("/notes/:id", (request, response, next) => {
+  const id = request.params.id;
+
+  Note.findById(id)
+    .then((note) => {
+      if (note) {
+        response.json(note);
+      } else {
+        response.status(404).json({ error: "note not found" }).end();
+      }
+    })
+    .catch(err => {
+      next(err)
+    })
 });
 
-app.get("/notes/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const note = notes.find((note) => note.id === id);
-
-  if (note) {
-    response.json(note);
-  } else {
-    response.status(404).json({ error: "note not found" }).end();
-  }
+app.get("/notes", (request, response, next) => {
+  Note.find({})
+    .then((notes) => {
+      response.json(notes);
+    })
+    .catch(err => {
+      next(err)
+    })
 });
 
-app.delete("/notes/:id", (request, response) => {
-  const id = Number(request.params.id);
-  notes = notes.filter((note) => note.id !== id);
+app.delete("/notes/:id", (request, response, next) => {
+  const id = request.params.id;
 
-  response.status(204).send();
+  Note.findByIdAndRemove(id)
+    .then(() => {
+      response.status(204).send();
+    })
+    .catch(err => {
+      next(err)
+    })
 });
 
-app.post("/notes", (request, response) => {
+app.post("/notes", (request, response, next) => {
   const body = request.body;
+
   if (!body.content) {
     return response.status(400).json({
       error: "content missing",
     });
   }
-  const note = {
-      content: body.content,
-      important: body.important || false,
-      date: new Date(),
-      id: generateId()
-  }
-  notes = [...notes, note]
-  response.json(note)
+
+  const note = new Note({
+    content: body.content,
+    important: body.important || false,
+    date: new Date(),
+  });
+
+  note.save()
+    .then((newNote) => {
+      response.json(newNote);
+    })
+    .catch(err => {
+      next(err)
+    })
 });
 
+app.put("/notes/:id", (request, response, next) => {
+  const id = request.params.id;
+  const note = request.body;
 
-app.put("/notes/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const noteToUpdate = request.body;
-  if(!noteToUpdate.content) {
+  if (!note.content) {
     return response.status(400).json({
       error: "content missing",
     });
   }
-  notes = notes.map(note => note.id === id ? noteToUpdate : note)
-  response.json(noteToUpdate)
-})
 
-const unknownEndpoint = (request, response) => {
-    response.status(404).send({ error: 'unknown endpoint' })
-}
-  
-app.use(unknownEndpoint)
+  const newNoteInfo = {
+    content: note.content,
+    important: note.important,
+  };
+
+  Note.findByIdAndUpdate(id, newNoteInfo, { new: true })
+    .then((newNote) => {
+      response.json(newNote);
+    })
+    .catch(err => {
+      next(err)
+    })
+});
+
+app.use(errorHandler);
+app.use(unknownEndpoint);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
