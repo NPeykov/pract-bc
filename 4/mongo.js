@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const mongoUrl = process.env.DB_URI;
+const mongoUrl = process.env.NODE_ENV == "test" ? process.env.DB_URI_TEST : process.env.DB_URI  
 
 const openDatabaseConection = () =>
   mongoose

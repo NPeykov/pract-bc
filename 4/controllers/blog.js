@@ -1,17 +1,15 @@
 const Blog = require("../models/blog");
 
-function showAllBlogs(request, response) {
-  Blog.find({}).then((blogs) => {
-    response.json(blogs);
-  });
+async function showAllBlogs(request, response) {
+  const blogs = await Blog.find({})
+  response.json(blogs);
 }
 
-function addNewBlog(request, response) {
+async function addNewBlog(request, response) {
   const blog = new Blog(request.body);
 
-  blog.save().then((result) => {
-    response.status(201).json(result);
-  });
+  const result = blog.save()
+  response.status(201).json(result);
 }
 
 module.exports = { showAllBlogs, addNewBlog }
