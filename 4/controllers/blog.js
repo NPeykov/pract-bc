@@ -8,7 +8,7 @@ async function showAllBlogs(request, response) {
 async function addNewBlog(request, response) {
   const blog = new Blog(request.body);
 
-  const result = blog.save()
+  const result = await blog.save()
   response.status(201).json(result);
 }
 
