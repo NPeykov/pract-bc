@@ -3,8 +3,7 @@ const app = require('../app')
 const mongoose = require('mongoose')
 const Blog = require('../models/blog')
 const server = require('../index')
-const openDatabaseConection = require('../mongo')
-const { initialBlogs, saveBlog } = require('./test_helpers')
+const { initialBlogs, saveBlog } = require('./blog_helper')
 
 const api = supertest(app)
 

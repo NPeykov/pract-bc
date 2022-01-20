@@ -10,6 +10,10 @@ async function createUser(request, response) {
   const { name, user_name, password } = request.body
   const hashedPassword = await bcrypt.hash(password, 10)
   
+  if(user_name.length <= 3 || password.length <= 3) {
+    return response.status(400).send({ error: "bad request :(" })
+  }
+
   const user = new User({
     user_name: user_name,
     name: name,
