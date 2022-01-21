@@ -9,10 +9,9 @@ async function showAllBlogs(request, response) {
 
 async function addNewBlog(request, response) {
   const body = request.body;
-  const token = obtainToken(request)
-  const data = jwt.decode(token, process.env.SECRET)
+  const data = jwt.decode(request.token, process.env.SECRET)
 
-  if(!token || !data.id) {
+  if(!request.token || !data) {
     return response.status(400).send({ error: 'token missing or invalid' })
   }
 
@@ -22,14 +21,6 @@ async function addNewBlog(request, response) {
 
   const result = await blog.save()
   response.status(201).json(result);
-}
-
-function obtainToken(request) {
-  const authorization = request.get('authorization')
-  if(authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.split(' ')[1]
-  }
-  return null
 }
 
 module.exports = { showAllBlogs, addNewBlog }
