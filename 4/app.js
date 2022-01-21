@@ -4,6 +4,7 @@ const openDatabaseConection = require('./mongo')
 const express = require('express')
 const blogRouter = require('./routes/blog')
 const userRouter = require('./routes/user')
+const loginRouter = require('./routes/login')
 const app = express()
 const cors = require('cors')
 
@@ -18,5 +19,6 @@ app.get('/', (request, response) => {
 
 app.use('/api/blog', blogRouter)
 app.use('/api/user', userRouter)
+app.use('/api/login', loginRouter)
 
 module.exports = app

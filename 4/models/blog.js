@@ -5,7 +5,7 @@ const blogSchema = new mongoose.Schema({
   author: String,
   url: String,
   likes: Number,
-  author: { type: mongoose.Types.ObjectId, ref: 'User' }
+  user: { type: mongoose.Types.ObjectId, ref: 'User' }
 });
 
 const Blog = mongoose.model("Blog", blogSchema);

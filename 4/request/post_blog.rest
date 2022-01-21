@@ -1,0 +1,10 @@
+POST http://localhost:3002/api/blog/
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZTlkYmYzN2NkMDQ3OTg1YjBjYjg3MyIsInBhc3N3b3JkIjoiJDJiJDEwJDZwR0ZVS1hia201czlldzNXclhtZE9qUlJYa1ZRNmlmS01zcy53eDh6U1ZqUENNSkdBM3VDIiwiaWF0IjoxNjQyNzI4NzU0fQ.HnQ-cAvdfjqDKsjLwEeBqaQiPHr-TTDUjjbLu_68O8k
+
+{
+  "title": "Theoric",
+  "author": "Elsabeth",
+  "url": "www.the.local",
+  "likes": 502
+}
