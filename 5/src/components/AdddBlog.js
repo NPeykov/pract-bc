@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const AddBlog = ({ token, setBlogs }) => {
+const AddBlog = ({ token, setBlogs, hideForm }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [likes, setLikes] = useState('')
@@ -14,6 +14,7 @@ const AddBlog = ({ token, setBlogs }) => {
       setBlogs((previousBlogs) => [...previousBlogs, response])
     })
     resetFormValues()
+    hideForm.toggleVisibility()
   }
 
   const resetFormValues = () => {

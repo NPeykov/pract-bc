@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import AddBlog from './AdddBlog'
 import Blog from './Blog'
+import Toggable from './Toggable'
 import blogService from '../services/blogs'
 
 const Blogs = ({ setLogout, user }) => {
   const [blogs, setBlogs] = useState([])
-  const [toggleForm, setToggleForm] = useState(false)
+  const toggleRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -25,16 +26,9 @@ const Blogs = ({ setLogout, user }) => {
         <button onClick={handleLogout}>Log out</button>
       </div>
       <br/>
-      {toggleForm === true ?
-      (
-      <>
-        <AddBlog token={user.token} setBlogs={setBlogs}/>
-        <button onClick={() => setToggleForm(false)}>Cancel</button>
-      </>
-      )
-      :
-      <button onClick={() => setToggleForm(true)}>Add new blog</button>
-      }
+      <Toggable text={'Add new note'} ref={toggleRef}>
+        <AddBlog token={user.token} setBlogs={setBlogs} hideForm={toggleRef.current}/>
+      </Toggable>
       <br/>
       {blogs.map(blog => <Blog key={blog._id} blog={blog}/> )}
     </div>
