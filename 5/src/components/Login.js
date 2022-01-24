@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import loginService from '../services/login'
 
-const Login = ({ setUser, setToken }) => {
+const Login = ({ setUser }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -9,7 +9,6 @@ const Login = ({ setUser, setToken }) => {
     event.preventDefault()
     const _user = await loginService.login(username, password)
     setUser(_user)
-    setToken(_user.token)
     window.localStorage.setItem('userSession', JSON.stringify(_user))
     setUsername('')
     setPassword('')
