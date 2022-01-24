@@ -26,7 +26,7 @@ const Blogs = ({ setLogout, user }) => {
         <button onClick={handleLogout}>Log out</button>
       </div>
       <br/>
-      <Toggable text={'Add new note'} ref={toggleRef}>
+      <Toggable toViewText='Add new note' toHideText='Cancel' ref={toggleRef}>
         <AddBlog token={user.token} setBlogs={setBlogs} hideForm={toggleRef.current}/>
       </Toggable>
       <br/>
