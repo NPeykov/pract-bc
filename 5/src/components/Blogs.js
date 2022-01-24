@@ -5,6 +5,7 @@ import blogService from '../services/blogs'
 
 const Blogs = ({ setLogout, user }) => {
   const [blogs, setBlogs] = useState([])
+  const [toggleForm, setToggleForm] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -24,7 +25,16 @@ const Blogs = ({ setLogout, user }) => {
         <button onClick={handleLogout}>Log out</button>
       </div>
       <br/>
-      <AddBlog token={user.token} setBlogs={setBlogs}/>
+      {toggleForm === true ?
+      (
+      <>
+        <AddBlog token={user.token} setBlogs={setBlogs}/>
+        <button onClick={() => setToggleForm(false)}>Cancel</button>
+      </>
+      )
+      :
+      <button onClick={() => setToggleForm(true)}>Add new blog</button>
+      }
       <br/>
       {blogs.map(blog => <Blog key={blog._id} blog={blog}/> )}
     </div>
