@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Login from './components/Login'
+import AddBlog from './components/AdddBlog'
 import blogService from './services/blogs'
-import loginService from './services/login'
-
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,7 +12,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -35,8 +34,13 @@ const App = () => {
   const renderBlogs = () => {
     return (
       <div>
-        <label>Hi {user.user_name}, you're logged in</label>
-        <button onClick={handleLogout}>Log out</button>
+        <div>
+          <label>Hi {user.user_name}, you're logged in</label>
+          <button onClick={handleLogout}>Log out</button>
+        </div>
+        <br/>
+        <AddBlog token={token} setBlogs={setBlogs}/>
+        <br/>
         {blogs.map(blog => <Blog key={blog._id} blog={blog}/> )}
       </div>
     )
