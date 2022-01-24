@@ -8,11 +8,8 @@ const getAll = async () => {
 
 const addBlog = async (data, token) => {
   try {
-    console.log(data)
-    console.log(token)
     const config = { headers: { Authorization: `bearer ${token}` } }
     const response = await axios.post(baseUrl, data, config)
-    console.log(response.data)
     return response.data
   } catch(e) {
     console.log(e)

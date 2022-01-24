@@ -9,30 +9,37 @@ const AddBlog = ({ token, setBlogs }) => {
 
   const addNewBlog = async (event) => {
     event.preventDefault()
-    console.log('triggered')
     const newBlog = { title, author, url, likes: Number(likes) }
     blogService.addBlog(newBlog, token).then((response) => {
       setBlogs((previousBlogs) => [...previousBlogs, response])
     })
+    resetFormValues()
+  }
+
+  const resetFormValues = () => {
+    setTitle('')
+    setAuthor('')
+    setLikes('')
+    setUrl('')
   }
 
   return (
     <form onSubmit={addNewBlog}>
       <div>
         <label>Title: </label>
-        <input type='text' placeholder='title' onChange={({ target }) => setTitle(target.value)}/>
+        <input type='text' placeholder='title' value={title} onChange={({ target }) => setTitle(target.value)}/>
       </div>
       <div>
         <label>Author: </label>
-        <input type='text' placeholder='author' onChange={({ target }) => setAuthor(target.value)}/>
+        <input type='text' placeholder='author' value={author} onChange={({ target }) => setAuthor(target.value)}/>
       </div>
       <div>
         <label>Likes: </label>
-        <input type='number' placeholder='likes'onChange={({ target }) => setLikes(target.value)}/>
+        <input type='number' placeholder='likes' value={likes} onChange={({ target }) => setLikes(target.value)}/>
       </div>
       <div>
         <label>Url: </label>
-        <input type='text' placeholder='url' onChange={({ target }) => setUrl(target.value)}/>
+        <input type='text' placeholder='url' value={url} onChange={({ target }) => setUrl(target.value)}/>
       </div>
       <button type='submit'>Create Blog</button>
     </form>
