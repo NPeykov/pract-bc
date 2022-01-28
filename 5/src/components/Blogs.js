@@ -30,7 +30,7 @@ const Blogs = ({ setLogout, user }) => {
         <AddBlog token={user.token} setBlogs={setBlogs} hideForm={toggleRef.current}/>
       </Toggable>
       <br/>
-      {blogs.map(blog => <Blog key={blog._id} blog={blog}/> )}
+      {blogs.map(blog => <Blog key={blog._id} blog={blog} setBlogs={setBlogs} />)}
     </div>
   )
 }

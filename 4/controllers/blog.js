@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
 
 async function showAllBlogs(request, response) {
-  const blogs = await Blog.find({}).populate("user", { __v: 0, _id: 0, password: 0 })
+  const blogs = await Blog.find({}).populate("user", { __v: 0, password: 0 })
   response.json(blogs);
 }
 
@@ -38,7 +38,8 @@ async function replaceBlog(request, response) {
 	}
 	const data = await Blog.findOneAndReplace(
 		{ _id: blogId },
-		body
+		body,
+		{ new: true }
 	)
 	return response.status(200).json(data)
 }

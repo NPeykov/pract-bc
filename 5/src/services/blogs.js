@@ -8,13 +8,28 @@ const getAll = async () => {
 
 const addBlog = async (data, token) => {
   try {
-    const config = { headers: { Authorization: `bearer ${token}` } }
+		const config = { headers: { Authorization: `bearer ${token}` } }
     const response = await axios.post(baseUrl, data, config)
     return response.data
   } catch(e) {
     console.log(e)
   }
-  
 }
 
-export default { getAll, addBlog }
+const likeBlog = async (blog) => {
+  try {
+    const url = baseUrl + `/${blog._id}`
+		let data = {
+			...blog,
+			user: blog.user._id,
+			likes: blog.likes + 1
+		}
+		delete data._id
+		const response = await axios.put(url, data)
+    return response.data
+  } catch(e) {
+    console.log(e)
+  }
+}
+
+export default { getAll, addBlog, likeBlog }
