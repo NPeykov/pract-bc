@@ -1,6 +1,8 @@
 const Blog = require("../models/blog")
 const User = require("../models/user")
 const jwt = require('jsonwebtoken')
+const mongoose = require('mongoose')
+const ObjectId = mongoose.Types.ObjectId
 
 async function showAllBlogs(request, response) {
   const blogs = await Blog.find({}).populate("user", { __v: 0, _id: 0, password: 0 })
@@ -23,4 +25,22 @@ async function addNewBlog(request, response) {
   response.status(201).json(result);
 }
 
-module.exports = { showAllBlogs, addNewBlog }
+async function replaceBlog(request, response) {
+	const body = request.body
+	const blogId = request.params.id
+	if(!ObjectId.isValid(blogId)) {
+		return response.status(500).send({ error: 'invalid id' })
+	}
+	const savedBlog = await Blog.findById(blogId)
+	const newBlog = {...body, user: ObjectId(body.user) }
+	if(savedBlog.user.toString() !== body.user) {
+		return response.status(401).send({ error: 'you do not have permission'})
+	}
+	const data = await Blog.findOneAndReplace(
+		{ _id: blogId },
+		body
+	)
+	return response.status(200).json(data)
+}
+  
+module.exports = { showAllBlogs, addNewBlog, replaceBlog }
