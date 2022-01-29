@@ -13,18 +13,18 @@ const Login = ({ setUser }) => {
     setUsername('')
     setPassword('')
   }
-  
+
   return (
     <>
       <form onSubmit={loginHandler}>
         <input type='text' placeholder='username' onChange={({ target }) => setUsername(target.value)}/>
         <input type='text' placeholder='password' onChange={({ target }) => setPassword(target.value)}/>
         <button>Log in</button>
-      </form> 
+      </form>
     </>
   )
-  
+
 }
-  
+
 
 export default Login

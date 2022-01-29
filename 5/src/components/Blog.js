@@ -10,19 +10,19 @@ const blogStyle = {
   marginBottom: 5
 }
 
-const Blog = ({ blog, setBlogs })=> {
+const Blog = ({ blog, setBlogs }) => {
 
-	function updateBlogs(oldBlogs) {
-		const newBlog = { ...blog, likes: blog.likes + 1 }
-		return oldBlogs.map(_blog => _blog === blog ? newBlog : _blog)
-	}
+  function updateBlogs(oldBlogs) {
+    const newBlog = { ...blog, likes: blog.likes + 1 }
+    return oldBlogs.map(_blog => _blog === blog ? newBlog : _blog)
+  }
 
   function handleLikeButton() {
     blogService
       .likeBlog(blog)
-			.then(response => {
-				setBlogs(prevValues => updateBlogs(prevValues))
-			})
+      .then(() => {
+        setBlogs(prevValues => updateBlogs(prevValues))
+      })
   }
 
   return (

@@ -1,4 +1,4 @@
-import React, {forwardRef, useState, useImperativeHandle} from 'react'
+import React, { forwardRef, useState, useImperativeHandle } from 'react'
 import PropTypes from 'prop-types'
 
 const Toggable = forwardRef(({ toHideText, toViewText, children }, ref) => {
@@ -11,21 +11,23 @@ const Toggable = forwardRef(({ toHideText, toViewText, children }, ref) => {
   return (
     <div>
       {
-      visible ?
-        <>
-          {children}
-          <button onClick={toggleVisibility}> {toHideText} </button>
-        </>
-        :
-        <button onClick={toggleVisibility}> {toViewText} </button>
+        visible ?
+          <>
+            {children}
+            <button onClick={toggleVisibility}> {toHideText} </button>
+          </>
+          :
+          <button onClick={toggleVisibility}> {toViewText} </button>
       }
     </div>
   )
 })
 
+Toggable.displayName = 'Toggable'
+
 Toggable.propTypes = {
-	toViewText: PropTypes.string.isRequired,
-	toHideText: PropTypes.string.isRequired
+  toViewText: PropTypes.string.isRequired,
+  toHideText: PropTypes.string.isRequired
 }
 
 

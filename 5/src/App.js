@@ -14,16 +14,16 @@ const App = () => {
     setUser(userParsed)
   }, [])
 
-  return (                                                                                                                                        
+  return (
     <div>
       <h2>blogs</h2>
       {
-      user !== null ?
-        <Blogs setLogout={setUser} user={user} />
-        :
-        <Login setUser={setUser} />
+        user !== null ?
+          <Blogs setLogout={setUser} user={user} />
+          :
+          <Login setUser={setUser} />
       }
-      
+
     </div>
   )
 }
