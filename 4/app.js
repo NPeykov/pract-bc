@@ -19,6 +19,11 @@ app.get('/', (request, response) => {
     response.send('<h3>Main page :)</h3>')
 })
 
+if(process.env.NODE_ENV === 'development') {
+	const resetDBRouter = require('./routes/resetDB')
+	app.use('/api/db', resetDBRouter)
+}
+
 app.use('/api/blog', blogRouter)
 app.use('/api/user', userRouter)
 app.use('/api/login', loginRouter)
