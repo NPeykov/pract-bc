@@ -7,22 +7,22 @@ import anecdoteReducer from './reducers/anecdoteReducer'
 import notificationReducer from './reducers/notificationReducer'
 import { composeWithDevTools } from 'redux-devtools-extension'
 
-const reducer = combineReducers({ 
-	notification: notificationReducer, 
-	anecdotes: anecdoteReducer 
+const reducer = combineReducers({
+	notification: notificationReducer,
+	anecdotes: anecdoteReducer
 })
 
 const store = createStore(reducer, composeWithDevTools())
 
-const clearTimer = () => setTimeout( () => {
+const clearTimer = () => setTimeout(() => {
 	store.dispatch({ type: 'notification/reset' })
-}, 5000 )
+}, 5000)
 
 store.subscribe(clearTimer)
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
+	<Provider store={store}>
+		<App />
+	</Provider>,
+	document.getElementById('root')
 )

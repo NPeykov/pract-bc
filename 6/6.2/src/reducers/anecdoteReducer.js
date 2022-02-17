@@ -1,12 +1,3 @@
-const anecdotesAtStart = [
-  'If it hurts, do it more often',
-  'Adding manpower to a late software project makes it later!',
-  'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
-  'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
-  'Premature optimization is the root of all evil.',
-  'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
-]
-
 const getId = () => (100000 * Math.random()).toFixed(0)
 
 const asObject = (anecdote) => {
@@ -17,7 +8,7 @@ const asObject = (anecdote) => {
   }
 }
 
-const initialState = anecdotesAtStart.map(asObject)
+const initialState = []
 
 const anecdoteReducer = (state = initialState, action) => {
 	switch(action.type) {
@@ -25,6 +16,8 @@ const anecdoteReducer = (state = initialState, action) => {
 			return [...state, action.payload]
 		case 'anecdote/vote':
 			return handleAnecdoteVote(state, action.payload.id)
+		case 'anecdote/initialize':
+			return action.payload
 		default:
 			return state
 	}
@@ -34,11 +27,10 @@ const handleAnecdoteVote = (anecdotes, id) => {
 	return anecdotes.map(a => a.id !== id ? a : {...a, votes: a.votes + 1})
 }
 
-export const createNewAnecdote = (content) => {
-	const newAnecdote = asObject(content)
+export const createNewAnecdote = (anecdote) => {
 	return {
 		type: 'anecdote/add',
-		payload: newAnecdote
+		payload: anecdote 
 	}
 }
 
@@ -46,6 +38,13 @@ export const vote = (id) => {
 	return {
 		type: 'anecdote/vote',
 		payload: { id }
+	}
+}
+
+export const initializeAnecdotes = (data) => {
+	return {
+		type: 'anecdote/initialize',
+		payload: data
 	}
 }
 
