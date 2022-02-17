@@ -3,7 +3,7 @@ const initialState = ''
 const notificationReducer = (state = initialState, action) => {
 	switch(action.type){
 		case 'notification/notify':
-			return 'you voted: ' + action.payload 
+			return action.payload 
 		case 'notification/reset':
 			return initialState
 		default:
@@ -11,10 +11,22 @@ const notificationReducer = (state = initialState, action) => {
 	}
 }
 
-export const notify = (anecdote) => {
+const resetNotification = () => {
 	return {
-		type: 'notification/notify',
-		payload: anecdote
+		type: 'notification/reset'
+	}
+}
+
+export const notify = (notification, time) => {
+	return async (dispatch) => {
+		dispatch({
+			type: 'notification/notify',
+			payload: notification
+		})
+		
+		setTimeout(() => {
+			dispatch(resetNotification())
+		}, time * 1000)
 	}
 }
 
