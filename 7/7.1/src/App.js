@@ -36,8 +36,6 @@ const App = () => {
 		navigate('/anecdotes')
   }
 
-	console.log(anecdotes)
-
 	const match = useMatch('/anecdotes/:id')
 	const anecdote = match
 			? anecdotes.find(anecdote => anecdote.id === Number(match.params.id))

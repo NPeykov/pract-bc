@@ -1,19 +1,26 @@
-import { useState } from 'react'
+import useCreateField from '../hooks/useCreateField'
 
-const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+const CreateNew = ({ addNew }) => {
+	const content = useCreateField('content')
+	const author = useCreateField('author')
+	const info = useCreateField('info')
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    props.addNew({
-      content,
-      author,
-      info,
+    addNew({
+			content: content.fields.value,
+      author: author.fields.value,
+      info: info.fields.value,
       votes: 0
     })
   }
+
+	const handleReset = (event) => {
+		event.preventDefault()
+		content.reset()
+		author.reset()
+		info.reset()
+	}
 
   return (
     <div>
@@ -21,17 +28,18 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...content.fields} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...author.fields} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input {...info.fields} />
         </div>
         <button>create</button>
+				<button onClick={handleReset}>reset</button>
       </form>
     </div>
   )
