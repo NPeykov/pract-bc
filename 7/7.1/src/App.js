@@ -4,7 +4,8 @@ import AnecdoteList from './components/AnecdoteList'
 import About from './components/About'
 import CreateNew from './components/CreateNew'
 import Footer from './components/Footer'
-import { Route, Routes } from 'react-router-dom'
+import Anecdote from './components/Anecdote' 
+import { Route, Routes, useMatch, useNavigate } from 'react-router-dom'
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -26,24 +27,21 @@ const App = () => {
 
   const [notification, setNotification] = useState('')
 
+	const navigate = useNavigate()
+
   const addNew = (anecdote) => {
-    anecdote.id = (Math.random() * 10000).toFixed(0)
+    const idAsString = (Math.random() * 10000).toFixed(0)
+		anecdote.id = parseInt(idAsString)
     setAnecdotes(anecdotes.concat(anecdote))
+		navigate('/anecdotes')
   }
 
-  const anecdoteById = (id) =>
-    anecdotes.find(a => a.id === id)
+	console.log(anecdotes)
 
-  const vote = (id) => {
-    const anecdote = anecdoteById(id)
-
-    const voted = {
-      ...anecdote,
-      votes: anecdote.votes + 1
-    }
-
-    setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
-  }
+	const match = useMatch('/anecdotes/:id')
+	const anecdote = match
+			? anecdotes.find(anecdote => anecdote.id === Number(match.params.id))
+			: null
 
   return (
     <div>
@@ -51,8 +49,9 @@ const App = () => {
 			<Menu />
 			<Routes>
 				<Route path='/anecdotes' element={<AnecdoteList anecdotes={anecdotes} />}/>
-				<Route path='/about' element={<About/>}/>
 				<Route path='/anecdotes/new' element={<CreateNew addNew={addNew}/>}/>
+				<Route path='/anecdotes/:id' element={<Anecdote anecdote={anecdote}/>} />
+				<Route path='/about' element={<About/>}/>
 			</Routes>
       <Footer />
     </div>
