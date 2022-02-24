@@ -17,25 +17,15 @@ let authors = [
     id: "afa5b6f1-344d-11e9-a414-719c6709cf3e",
     born: 1821
   },
-  { 
+  {
     name: 'Joshua Kerievsky', // birthyear not known
     id: "afa5b6f2-344d-11e9-a414-719c6709cf3e",
   },
-  { 
+  {
     name: 'Sandi Metz', // birthyear not known
     id: "afa5b6f3-344d-11e9-a414-719c6709cf3e",
   },
 ]
-
-/*
- * Suomi:
- * Saattaisi olla järkevämpää assosioida kirja ja sen tekijä tallettamalla kirjan yhteyteen tekijän nimen sijaan tekijän id
- * Yksinkertaisuuden vuoksi tallennamme kuitenkin kirjan yhteyteen tekijän nimen
- *
- * English:
- * It might make more sense to associate a book with its author by storing the author's id in the context of the book instead of the author's name
- * However, for simplicity, we will store the author's name in connection with the book
-*/
 
 let books = [
   {
@@ -65,7 +55,7 @@ let books = [
     author: 'Joshua Kerievsky',
     id: "afa5de01-344d-11e9-a414-719c6709cf3e",
     genres: ['refactoring', 'patterns']
-  },  
+  },
   {
     title: 'Practical Object-Oriented Design, An Agile Primer Using Ruby',
     published: 2012,
@@ -124,33 +114,33 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-		bookCount: () => books.length,
-		authorCount: () => authors.length,
-		allBooks: (root, args) => {
-			if(!args.author) {
-				return books 
-			}
-			return books.filter(book => book.author === args.author)
-		},
-		allAuthors: () => authors
-	},
+    bookCount: () => books.length,
+    authorCount: () => authors.length,
+    allBooks: (root, args) => {
+      if (!args.author) {
+        return books
+      }
+      return books.filter(book => book.author === args.author)
+    },
+    allAuthors: () => authors
+  },
 
-	Author: {
-		bookCount: (root) => books.filter(book => book.author === root.name).length
-	},
+  Author: {
+    bookCount: (root) => books.filter(book => book.author === root.name).length
+  },
 
-	Mutation: {
-		addBook: (root, args) => {
-			const book = { ...args, id: uuid.v1() }
-			const { author } = args
-			books.push(book)
-			if(!authors.find(_author => _author.name === author)) {
-				const newAuthor = { name: author, id: uuid.v1() }
-				authors.push(newAuthor)
-			}
-			return book
-		}
-	}
+  Mutation: {
+    addBook: (root, args) => {
+      const book = { ...args, id: uuid.v1() }
+      const { author } = args
+      books.push(book)
+      if (!authors.find(_author => _author.name === author)) {
+        const newAuthor = { name: author, id: uuid.v1() }
+        authors.push(newAuthor)
+      }
+      return book
+    }
+  }
 }
 
 const server = new ApolloServer({
