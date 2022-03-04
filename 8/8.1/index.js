@@ -1,4 +1,4 @@
-import { UserInputError, ApolloServer, gql } from 'apollo-server'
+import { AuthenticationError, UserInputError, ApolloServer, gql } from 'apollo-server'
 import Book from './models/book.js'
 import Author from './models/author.js'
 import User from './models/user.js'
@@ -79,7 +79,9 @@ const resolvers = {
   },
 
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: async (root, args, { currentUser }) => {
+      if(!currentUser) throw new AuthenticationError('not authorized')
+
       const exists = await Author.findOne({ name: args.author })
       if (!exists) {
         const newAuthor = new Author({ name: args.author })
