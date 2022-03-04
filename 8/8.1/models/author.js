@@ -1,22 +1,15 @@
 import mongoose from 'mongoose'
 
 const schema = new mongoose.Schema({
-  title: {
+  name: {
     type: String,
     required: true,
     unique: true,
-    minlength: 2
+    minlength: 4
   },
-  published: {
+  born: {
     type: Number,
   },
-  author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Author'
-  },
-  genres: [
-    { type: String }
-  ]
 })
 
-module.exports = mongoose.model('Book', schema)
+export default mongoose.model('Author', schema)

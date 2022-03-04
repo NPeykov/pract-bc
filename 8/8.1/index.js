@@ -1,5 +1,7 @@
-const { ApolloServer, gql } = require('apollo-server')
-const uuid = require('uuid')
+import { ApolloServer, gql } from 'apollo-server'
+import Book from './models/book.js'
+import Author from './models/author.js'
+import './db.js'
 
 let authors = [
   {
@@ -83,7 +85,7 @@ const typeDefs = gql`
 	type Book {
     title: String!
     published: Int!
-    author: Author! 
+    author: String! 
     genres: [String!]!
     id: ID!
 	}
@@ -114,15 +116,15 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
-    allBooks: (root, args) => {
+    bookCount: () => Book.collection.countDocuments(),
+    authorCount: () => Author.collection.countDocuments(),
+    allBooks: async (root, args) => {
       if (!args.author) {
-        return books
+        return await Book.find({ }) 
       }
-      return books.filter(book => book.author === args.author)
+      return await Book.find({ author: args.author })
     },
-    allAuthors: () => authors
+    allAuthors: async () => await Author.find({ })
   },
 
   Author: {
@@ -130,15 +132,15 @@ const resolvers = {
   },
 
   Mutation: {
-    addBook: (root, args) => {
-      const book = { ...args, id: uuid.v1() }
-      const { author } = args
-      books.push(book)
-      if (!authors.find(_author => _author.name === author)) {
-        const newAuthor = { name: author, id: uuid.v1() }
-        authors.push(newAuthor)
+    addBook: async (root, args) => {
+      const exists = await Author.findOne({ name: args.author })
+      if(!exists) {
+        const newAuthor = new Author({ name: args.author })
+        await newAuthor.save()
       }
-      return book
+      const newBook = new Book({ ...args })
+      await newBook.save()
+      return newBook 
     }
   }
 }
