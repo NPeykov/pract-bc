@@ -2,10 +2,12 @@ import { AuthenticationError, UserInputError, ApolloServer, gql } from 'apollo-s
 import Book from './models/book.js'
 import Author from './models/author.js'
 import User from './models/user.js'
+import { PubSub } from 'graphql-subscriptions'
 import jwt from 'jsonwebtoken'
 import './db.js'
 
 const THE_SECRET = ':)'
+const pubsub = new PubSub()
 
 const typeDefs = gql`
 	type Book {
@@ -55,6 +57,10 @@ const typeDefs = gql`
       password: String!
     ): Token
 	}
+
+  type Subscription {
+    bookAdded: Book!
+  }
 `
 
 const resolvers = {
@@ -89,6 +95,7 @@ const resolvers = {
       }
       const newBook = new Book({ ...args })
       await newBook.save()
+      pubsub.publish('BOOK_ADDED', { bookAdded: newBook })
       return newBook
     },
     createUser: async (root, args) => {
@@ -102,6 +109,11 @@ const resolvers = {
       const userToDecode = { username: user.username, id: user._id }
 
       return { value: jwt.sign(userToDecode, THE_SECRET) }
+    }
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
     }
   }
 }
